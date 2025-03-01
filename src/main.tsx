@@ -1,16 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { ChakraProvider } from '@chakra-ui/react'
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import App from './App'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <ChakraProvider>
-      <BrowserRouter basename="/hop2much">
-        <App />
-      </BrowserRouter>
-    </ChakraProvider>
-  </React.StrictMode>,
-)
+// Add error logging
+const root = document.getElementById('root')
+console.log('Root element:', root)
+
+if (!root) {
+  throw new Error('Root element not found')
+}
+
+try {
+  ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+      <ChakraProvider>
+        <HashRouter>
+          <App />
+        </HashRouter>
+      </ChakraProvider>
+    </React.StrictMode>
+  )
+  console.log('App rendered successfully')
+} catch (error) {
+  console.error('Error rendering app:', error)
+}

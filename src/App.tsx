@@ -1,31 +1,27 @@
-import { ChakraProvider, Box } from '@chakra-ui/react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Box } from '@chakra-ui/react'
+import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Quiz from './pages/Quiz'
 import Results from './pages/Results'
 
 function App() {
   return (
-    <ChakraProvider>
-      <Router>
-        <Box 
-          minH="100vh" 
-          w="100vw" 
-          bg="gray.50" 
-          margin="0" 
-          padding="0" 
-          display="flex" 
-          flexDirection="column"
-          overflow="hidden"
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/quiz" element={<Quiz />} />
-            <Route path="/results" element={<Results />} />
-          </Routes>
-        </Box>
-      </Router>
-    </ChakraProvider>
+    <Box 
+      minH="100vh" 
+      w="100vw" 
+      bg="gray.50" 
+      margin="0" 
+      padding="0" 
+      display="flex" 
+      flexDirection="column"
+      overflow="hidden"
+    >
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/quiz" element={<Quiz />} />
+        <Route path="/results" element={<Results />} />
+      </Routes>
+    </Box>
   )
 }
 
