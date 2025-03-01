@@ -7,7 +7,7 @@ const Home = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [selectedAge, setSelectedAge] = useState('6')
-  const showBackButton = location.pathname !== '/'
+  const showBackButton = location.pathname !== '/hop2much'
 
   return (
     <Box 
@@ -71,7 +71,7 @@ const Home = () => {
         <Button
           colorScheme="purple"
           size="lg"
-          onClick={() => navigate(`/quiz?age=${selectedAge}`)}
+          onClick={() => navigate(`/hop2much/quiz?age=${selectedAge}`)}
           _hover={{ transform: 'scale(1.05)', bg: 'purple.500' }}
           transition="all 0.2s"
           w="200px"

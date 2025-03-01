@@ -14,8 +14,9 @@ export interface QuizQuestion {
   question: string
   options: string[]
   correctAnswer: number
-  explanation?: string
+  explanation: string
   difficulty: 'easy' | 'medium' | 'hard'
-  category: 'arithmetic' | 'algebra' | 'geometry' | 'logic'
+  category: string
   ageGroup: number
+  hints: string[]
 } 

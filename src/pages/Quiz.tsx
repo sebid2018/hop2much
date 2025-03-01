@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, Heading, Text, VStack, Stack, Badge, Flex, useToast } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack, Stack, Badge, Flex, IconButton, Tooltip } from '@chakra-ui/react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
+import { FaLightbulb } from 'react-icons/fa'
 import NavHeader from '../components/NavHeader'
 import QuizTimer from '../components/QuizTimer'
 import { questions } from '../data/questions'
@@ -13,7 +14,6 @@ const Quiz = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const selectedAge = parseInt(searchParams.get('age') || '6')
-  const toast = useToast()
 
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string>('')
@@ -22,19 +22,14 @@ const Quiz = () => {
   const [showConfetti, setShowConfetti] = useState(false)
   const [shake, setShake] = useState(false)
   const [isQuizStarted, setIsQuizStarted] = useState(false)
+  const [hintsUsed, setHintsUsed] = useState(0)
+  const [shownHints, setShownHints] = useState<string[]>([])
 
   const filteredQuestions = questions.filter(q => q.ageGroup === selectedAge)
 
   useEffect(() => {
     if (filteredQuestions.length === 0) {
-      navigate('/')
-      toast({
-        title: "No questions available",
-        description: "No questions found for this age group",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      })
+      navigate('/hop2much')
     } else {
       // Start the quiz after a short delay
       const timer = setTimeout(() => {
@@ -42,7 +37,7 @@ const Quiz = () => {
       }, 1000)
       return () => clearTimeout(timer)
     }
-  }, [filteredQuestions, navigate, toast])
+  }, [filteredQuestions, navigate])
 
   const handleAnswer = () => {
     if (!showExplanation) {
@@ -63,10 +58,24 @@ const Quiz = () => {
     if (currentQuestion < filteredQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
       setSelectedAnswer('')
+      // Reset hints for next question
+      setHintsUsed(0)
+      setShownHints([])
     } else {
       setIsQuizStarted(false)
-      navigate('/results', { state: { score, total: filteredQuestions.length } })
+      navigate('/hop2much/results', { state: { score, total: filteredQuestions.length } })
     }
+  }
+
+  const handleHint = () => {
+    if (hintsUsed >= 3) return
+
+    const currentQ = filteredQuestions[currentQuestion]
+    if (!currentQ.hints || currentQ.hints.length === 0) return
+
+    const nextHint = currentQ.hints[hintsUsed]
+    setShownHints([...shownHints, nextHint])
+    setHintsUsed(hintsUsed + 1)
   }
 
   if (filteredQuestions.length === 0) return null
@@ -129,16 +138,46 @@ const Quiz = () => {
           borderRadius="xl"
           w="full"
         >
-          <Flex gap={2} mb={4}>
-            <Badge colorScheme={currentQ.difficulty === 'easy' ? 'green' : currentQ.difficulty === 'medium' ? 'yellow' : 'red'}>
-              {currentQ.difficulty}
-            </Badge>
-            <Badge colorScheme="purple">{currentQ.category}</Badge>
-            <Badge colorScheme="blue">{currentQ.ageGroup} years</Badge>
+          <Flex gap={2} mb={4} align="center" justify="space-between">
+            <Flex gap={2}>
+              <Badge colorScheme={currentQ.difficulty === 'easy' ? 'green' : currentQ.difficulty === 'medium' ? 'yellow' : 'red'}>
+                {currentQ.difficulty}
+              </Badge>
+              <Badge colorScheme="purple">{currentQ.category}</Badge>
+              <Badge colorScheme="blue">{currentQ.ageGroup} years</Badge>
+            </Flex>
+            <Tooltip label={hintsUsed >= 3 ? "No more hints available" : "Get a hint"}>
+              <IconButton
+                aria-label="Get hint"
+                icon={<FaLightbulb />}
+                colorScheme="yellow"
+                variant="outline"
+                isDisabled={hintsUsed >= 3 || showExplanation}
+                onClick={handleHint}
+              />
+            </Tooltip>
           </Flex>
           <Heading size="lg" mb={4} color="purple.600">
             Question {currentQuestion + 1} of {filteredQuestions.length}
           </Heading>
+          {shownHints.length > 0 && (
+            <VStack align="stretch" mb={6} spacing={2}>
+              {shownHints.map((hint, index) => (
+                <Box 
+                  key={index}
+                  p={3}
+                  bg="yellow.50"
+                  borderRadius="md"
+                  borderLeft="4px solid"
+                  borderColor="yellow.400"
+                >
+                  <Text color="yellow.800">
+                    <strong>Hint {index + 1}:</strong> {hint}
+                  </Text>
+                </Box>
+              ))}
+            </VStack>
+          )}
           <Text fontSize="xl" mb={8}>
             {currentQ.question}
           </Text>
