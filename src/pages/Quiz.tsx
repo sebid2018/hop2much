@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Box, Button, Heading, Text, VStack, Stack, Badge, Flex, useToast, Center } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack, Stack, Badge, Flex, useToast } from '@chakra-ui/react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
-import { questions } from '../data/questions'
-import { QuizQuestion } from '../types'
 import NavHeader from '../components/NavHeader'
 import QuizTimer from '../components/QuizTimer'
+import { questions } from '../data/questions'
 
 const MotionBox = motion(Box)
 

@@ -1,4 +1,4 @@
-import { Box, IconButton, Flex } from '@chakra-ui/react'
+import { Box, IconButton } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 
 const NavHeader = () => {

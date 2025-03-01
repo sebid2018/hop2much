@@ -1,4 +1,4 @@
-import { Box, Button, Heading, Text, VStack, Circle, Center } from '@chakra-ui/react'
+import { Box, Button, Heading, Text, VStack, Circle } from '@chakra-ui/react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ReactConfetti from 'react-confetti'
